@@ -5,6 +5,11 @@ use App\Http\Middleware\EnsureMember;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Env;
+
+if (php_sapi_name() === 'apache2handler' && ($_SERVER['WINDIR'] ?? false)) {
+    Env::disablePutenv();
+}
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
