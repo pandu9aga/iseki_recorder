@@ -61,41 +61,45 @@
             @if ($folder->photos->isEmpty())
                 <p class="py-8 text-center text-sm text-pink-400">Belum ada foto di folder ini.</p>
             @else
-                <form method="POST" action="{{ route("$prefix.download.photos", $folder) }}" id="zipForm">
+                <div class="mb-3 flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 text-pink-600">
+                        <input type="checkbox" id="selectAllPhotos" class="h-4 w-4 rounded border-pink-300 accent-pink-600">
+                        <span>Pilih semua</span>
+                    </label>
+                    <button type="button" id="downloadZipBtn"
+                        class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-amber-600">
+                        ⬇ Download ZIP Terpilih
+                    </button>
+                </div>
+
+                <form method="POST" action="{{ route("$prefix.download.photos", $folder) }}" id="zipForm" class="hidden">
                     @csrf
-
-                    <div class="mb-3 flex items-center justify-between text-sm">
-                        <label class="flex items-center gap-2 text-pink-600">
-                            <input type="checkbox" id="selectAllPhotos" class="h-4 w-4 rounded border-pink-300 accent-pink-600">
-                            <span>Pilih semua</span>
-                        </label>
-                        <button type="submit" class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-amber-600">
-                            ⬇ Download ZIP Terpilih
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-                        @foreach ($folder->photos as $photo)
-                            <div class="group relative overflow-hidden rounded-xl border border-pink-100">
-                                <input type="checkbox" name="photo_ids[]" value="{{ $photo->id }}"
-                                    class="photo-check absolute left-2 top-2 z-10 h-4 w-4 rounded border-pink-300 accent-pink-600">
-                                <a href="{{ $folder->photoUrl($photo) }}" target="_blank">
-                                    <img src="{{ $folder->photoUrl($photo) }}" alt="{{ $photo->filename }}"
-                                        class="aspect-square w-full object-cover transition group-hover:scale-105" loading="lazy">
-                                </a>
-                                <div class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/60 to-transparent px-2 pb-1.5 pt-5">
-                                    <span class="truncate text-[10px] text-white">{{ $photo->filename }}</span>
-                                    <form method="POST" action="{{ route("$prefix.photos.destroy", [$folder, $photo]) }}"
-                                          onsubmit="return confirm('Hapus foto ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="rounded bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white hover:bg-red-600">✕</button>
-                                    </form>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                    <div id="zipPhotoInputs"></div>
                 </form>
+
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+                    @foreach ($folder->photos as $photo)
+                        <div class="group relative overflow-hidden rounded-xl border border-pink-100">
+                            <input type="checkbox" value="{{ $photo->id }}"
+                                class="photo-check absolute left-2 top-2 z-10 h-4 w-4 rounded border-pink-300 accent-pink-600">
+                            <a href="{{ $folder->photoUrl($photo) }}" target="_blank">
+                                <img src="{{ $folder->photoUrl($photo) }}" alt="{{ $photo->filename }}"
+                                    class="aspect-square w-full object-cover transition group-hover:scale-105" loading="lazy">
+                            </a>
+                            <div class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/60 to-transparent px-2 pb-1.5 pt-5">
+                                <span class="truncate text-[10px] text-white">{{ $photo->filename }}</span>
+                                <form method="POST" action="{{ route("$prefix.photos.destroy", [$folder, $photo]) }}"
+                                      class="photo-delete-form"
+                                      onsubmit="return confirm('Hapus foto ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="rounded bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white hover:bg-red-600">✕</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             @endif
         </div>
     </div>

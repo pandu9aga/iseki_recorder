@@ -68,6 +68,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 cb.checked = selectAll.checked;
             });
         });
+
+        photoChecks.forEach((cb) => {
+            cb.addEventListener('change', function () {
+                selectAll.checked = photoChecks.length > 0 && [...photoChecks].every((c) => c.checked);
+            });
+        });
+    }
+
+    const downloadZipBtn = document.getElementById('downloadZipBtn');
+    const zipForm = document.getElementById('zipForm');
+    const zipPhotoInputs = document.getElementById('zipPhotoInputs');
+
+    if (downloadZipBtn && zipForm && zipPhotoInputs) {
+        downloadZipBtn.addEventListener('click', function () {
+            const ids = [...document.querySelectorAll('.photo-check:checked')].map((cb) => cb.value);
+            if (!ids.length) {
+                alert('Pilih minimal satu foto.');
+                return;
+            }
+            zipPhotoInputs.innerHTML = '';
+            ids.forEach((id) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'photo_ids[]';
+                input.value = id;
+                zipPhotoInputs.appendChild(input);
+            });
+            zipForm.submit();
+        });
     }
 
     initCameraModule();
