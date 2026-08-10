@@ -13,4 +13,13 @@ class FolderString extends Model
     {
         return $this->belongsTo(Folder::class);
     }
+
+    public function parts(): array
+    {
+        return collect(preg_split('/[;|]/', $this->content ?? ''))
+            ->map(fn ($part) => trim($part))
+            ->filter(fn ($part) => $part !== '')
+            ->values()
+            ->all();
+    }
 }

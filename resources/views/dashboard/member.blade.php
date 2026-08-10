@@ -27,7 +27,7 @@
     <div class="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
         <div class="text-3xl">🔤</div>
         <div class="mt-2 text-3xl font-bold text-pink-700">{{ $stats['strings'] }}</div>
-        <div class="text-sm text-pink-500">Total String</div>
+        <div class="text-sm text-pink-500">Total QR</div>
     </div>
 </div>
 
@@ -47,7 +47,7 @@
                     <div class="mt-2 truncate font-semibold text-pink-800">{{ $folder->nama }}</div>
                     <div class="mt-2 flex gap-3 text-xs text-pink-500">
                         <span>{{ $folder->photos_count }} foto</span>
-                        <span>{{ $folder->strings_count }} string</span>
+                        <span>{{ $folder->strings_count }} QR</span>
                     </div>
                 </a>
             @endforeach

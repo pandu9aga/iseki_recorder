@@ -24,7 +24,7 @@
         </div>
 
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route("$prefix.download.strings", $folder) }}" class="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700">⬇ Unduh Excel String</a>
+            <a href="{{ route("$prefix.download.strings", $folder) }}" class="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-700">⬇ Unduh Excel QR</a>
             <form method="POST" action="{{ route("$prefix.folders.destroy", $folder) }}" onsubmit="return confirm('Hapus folder {{ $folder->nama }} beserta isinya?')">
                 @csrf
                 @method('DELETE')
@@ -38,8 +38,8 @@
     <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{{ $errors->first('photo') }}</div>
 @endif
 
-<div class="grid gap-6 lg:grid-cols-3">
-    <div class="lg:col-span-2">
+<div class="grid gap-6 lg:grid-cols-2">
+    <div class="min-w-0">
         <div class="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
             <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 class="text-lg font-semibold text-pink-800">🖼️ Foto ({{ $folder->photos->count() }})</h2>
@@ -104,34 +104,55 @@
         </div>
     </div>
 
-    <div>
+    <div class="min-w-0">
         <div class="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
             <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <h2 class="text-lg font-semibold text-pink-800">🔤 String ({{ $folder->strings->count() }})</h2>
+                <h2 class="text-lg font-semibold text-pink-800">🔤 QR ({{ $folder->strings->count() }})</h2>
                 <button type="button" id="openQr" data-action="{{ route("$prefix.strings.store", $folder) }}" class="inline-flex items-center gap-2 rounded-xl bg-pink-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-pink-700">
                     <span class="text-lg leading-none">📲</span> Scan QR
                 </button>
             </div>
 
             @if ($folder->strings->isEmpty())
-                <p class="py-8 text-center text-sm text-pink-400">Belum ada string. Scan QR untuk menambah.</p>
+                <p class="py-8 text-center text-sm text-pink-400">Belum ada QR. Scan QR untuk menambah.</p>
             @else
-                <ul class="space-y-2">
-                    @foreach ($folder->strings as $string)
-                        <li class="flex items-start justify-between gap-3 rounded-xl border border-pink-100 bg-pink-50/60 p-3">
-                            <div class="min-w-0">
-                                <p class="break-all text-sm text-gray-700">{{ $string->content }}</p>
-                                <p class="mt-1 text-xs text-pink-400">{{ $string->created_at ? $string->created_at->format('d M Y H:i:s') : '-' }}</p>
-                            </div>
-                            <form method="POST" action="{{ route("$prefix.strings.destroy", [$folder, $string]) }}"
-                                  onsubmit="return confirm('Hapus string ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="rounded bg-red-100 px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-200">✕</button>
-                            </form>
-                        </li>
-                    @endforeach
-                </ul>
+                @php
+                    $maxParts = $folder->strings->map(fn ($s) => count($s->parts()))->max() ?? 0;
+                @endphp
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-max text-left text-sm">
+                        <thead>
+                            <tr class="border-b border-pink-100 text-xs uppercase text-pink-400">
+                                <th class="px-3 py-2">No</th>
+                                <th class="px-3 py-2">Waktu</th>
+                                @for ($i = 1; $i <= $maxParts; $i++)
+                                    <th class="px-3 py-2">QR {{ $i }}</th>
+                                @endfor
+                                <th class="px-3 py-2 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($folder->strings as $index => $string)
+                                @php $parts = $string->parts(); @endphp
+                                <tr class="border-b border-pink-50">
+                                    <td class="px-3 py-2 text-pink-400">{{ $index + 1 }}</td>
+                                    <td class="whitespace-nowrap px-3 py-2 text-xs text-pink-400">{{ $string->created_at ? $string->created_at->format('d M Y H:i:s') : '-' }}</td>
+                                    @for ($i = 0; $i < $maxParts; $i++)
+                                        <td class="min-w-32 break-all px-3 py-2 text-gray-700">{{ $parts[$i] ?? '-' }}</td>
+                                    @endfor
+                                    <td class="px-3 py-2 text-right">
+                                        <form method="POST" action="{{ route("$prefix.strings.destroy", [$folder, $string]) }}"
+                                              onsubmit="return confirm('Hapus QR ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded bg-red-100 px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-200">✕</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @endif
         </div>
     </div>

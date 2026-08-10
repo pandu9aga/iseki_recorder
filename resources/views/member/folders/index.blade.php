@@ -16,7 +16,7 @@
 @if ($folders->isEmpty())
     <div class="rounded-2xl border border-dashed border-pink-200 bg-white p-10 text-center">
         <div class="text-4xl">📁</div>
-        <p class="mt-2 text-sm text-pink-500">Anda belum memiliki folder. Buat folder baru untuk mulai merekam foto & string.</p>
+        <p class="mt-2 text-sm text-pink-500">Anda belum memiliki folder. Buat folder baru untuk mulai merekam foto & QR.</p>
     </div>
 @else
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

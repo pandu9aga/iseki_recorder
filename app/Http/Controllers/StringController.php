@@ -21,7 +21,7 @@ class StringController extends Controller
             'content' => trim($data['content']),
         ]);
 
-        return back()->with('success', 'String berhasil ditambahkan.');
+        return back()->with('success', 'QR berhasil ditambahkan.');
     }
 
     public function destroy(Folder $folder, FolderString $string)
@@ -30,7 +30,7 @@ class StringController extends Controller
 
         $string->delete();
 
-        return back()->with('success', 'String berhasil dihapus.');
+        return back()->with('success', 'QR berhasil dihapus.');
     }
 
     protected function authorizeFolder(Folder $folder): void

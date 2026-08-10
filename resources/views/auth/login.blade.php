@@ -19,17 +19,17 @@
             @endif
 
             <div class="mb-5 grid grid-cols-2 gap-2 rounded-xl bg-pink-50 p-1">
-                <button type="button" id="tabAdmin" class="tab-btn rounded-lg py-2 text-sm font-semibold bg-pink-600 text-white">Admin</button>
-                <button type="button" id="tabMember" class="tab-btn rounded-lg py-2 text-sm font-semibold text-pink-600">Member</button>
+                <button type="button" id="tabMember" class="tab-btn rounded-lg py-2 text-sm font-semibold bg-pink-600 text-white">Member</button>
+                <button type="button" id="tabAdmin" class="tab-btn rounded-lg py-2 text-sm font-semibold text-pink-600">Admin</button>
             </div>
 
             <form method="POST" action="{{ route('login.post') }}">
                 @csrf
-                <input type="hidden" name="role" id="roleInput" value="admin">
+                <input type="hidden" name="role" id="roleInput" value="member">
 
                 <div class="mb-4">
-                    <label for="login" id="loginLabel" class="mb-1 block text-sm font-medium text-pink-700">Username</label>
-                    <input type="text" id="login" name="login" value="{{ old('login') }}" required autofocus
+                    <label for="login" id="loginLabel" class="mb-1 block text-sm font-medium text-pink-700">NIK</label>
+                    <input type="text" id="login" name="login" value="{{ old('login') }}" required autofocus placeholder="Masukkan NIK"
                         class="w-full rounded-xl border border-pink-200 px-4 py-2.5 text-sm focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-200">
                 </div>
 

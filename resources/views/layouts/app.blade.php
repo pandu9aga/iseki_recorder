@@ -9,7 +9,7 @@
 </head>
 <body class="min-h-screen bg-pink-50 text-gray-800 antialiased">
     <nav class="bg-pink-600 shadow-lg sticky top-0 z-40">
-        <div class="mx-auto max-w-7xl px-4">
+        <div class="px-4">
             <div class="flex h-16 items-center justify-between">
                 <a href="{{ route('dashboard.landing') }}" class="flex items-center gap-2">
                     <span class="text-2xl">📷</span>
@@ -67,7 +67,7 @@
         </div>
     </nav>
 
-    <main class="mx-auto max-w-7xl px-4 py-6">
+    <main class="px-4 py-6">
         @if (session('success'))
             <div class="mb-4 flex items-center justify-between rounded-xl border border-pink-200 bg-pink-100 px-4 py-3 text-sm font-medium text-pink-800">
                 <span>{{ session('success') }}</span>

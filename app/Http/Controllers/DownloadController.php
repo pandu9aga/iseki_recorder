@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Folder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use ZipArchive;
@@ -57,30 +58,43 @@ class DownloadController extends Controller
 
         $strings = $folder->strings()->orderBy('id')->get();
 
+        $maxParts = $strings->map(fn ($string) => count($string->parts()))->max() ?? 0;
+
         $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Strings');
+        $sheet->setTitle('QR');
 
         $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Isi String');
-        $sheet->setCellValue('C1', 'Waktu');
+        $sheet->setCellValue('B1', 'Waktu');
 
-        $sheet->getStyle('A1:C1')->getFont()->setBold(true);
+        for ($i = 1; $i <= $maxParts; $i++) {
+            $sheet->setCellValue(Coordinate::stringFromColumnIndex($i + 2).'1', 'QR '.$i);
+        }
+
+        $lastColumn = Coordinate::stringFromColumnIndex($maxParts + 2);
+        $sheet->getStyle('A1:'.$lastColumn.'1')->getFont()->setBold(true);
         $sheet->getColumnDimension('A')->setWidth(6);
-        $sheet->getColumnDimension('B')->setWidth(60);
-        $sheet->getColumnDimension('C')->setWidth(22);
+        $sheet->getColumnDimension('B')->setWidth(22);
+
+        for ($i = 1; $i <= $maxParts; $i++) {
+            $sheet->getColumnDimension(Coordinate::stringFromColumnIndex($i + 2))->setWidth(40);
+        }
 
         $row = 2;
 
         foreach ($strings as $index => $string) {
             $sheet->setCellValue('A'.$row, $index + 1);
-            $sheet->setCellValue('B'.$row, $string->content);
-            $sheet->setCellValue('C'.$row, $string->created_at ? $string->created_at->format('Y-m-d H:i:s') : '');
+            $sheet->setCellValue('B'.$row, $string->created_at ? $string->created_at->format('Y-m-d H:i:s') : '');
+
+            foreach ($string->parts() as $i => $part) {
+                $sheet->setCellValue(Coordinate::stringFromColumnIndex($i + 3).$row, $part);
+            }
+
             $row++;
         }
 
         $writer = new Xlsx($spreadsheet);
-        $fileName = 'string_'.Str::slug($folder->nama).'_'.$folder->tanggal->format('Ymd').'.xlsx';
+        $fileName = 'qr_'.Str::slug($folder->nama).'_'.$folder->tanggal->format('Ymd').'.xlsx';
         $tempPath = tempnam(sys_get_temp_dir(), 'recorder_').'.xlsx';
 
         $writer->save($tempPath);
