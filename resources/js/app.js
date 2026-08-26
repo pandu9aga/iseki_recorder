@@ -1,10 +1,12 @@
 import './bootstrap';
 import { initCameraModule } from './camera';
 import { initQrModule } from './qr';
+import { initTimerModule } from './timer';
 
 document.addEventListener('DOMContentLoaded', function () {
     const navToggle = document.getElementById('navToggle');
     const navMobile = document.getElementById('navMobile');
+
 
     if (navToggle && navMobile) {
         navToggle.addEventListener('click', function () {
@@ -101,4 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initCameraModule();
     initQrModule();
+    initTimerModule();
 });
+

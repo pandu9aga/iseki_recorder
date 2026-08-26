@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
     <div class="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
         <div class="text-3xl">📁</div>
         <div class="mt-2 text-3xl font-bold text-pink-700">{{ $stats['folders'] }}</div>
@@ -30,11 +30,17 @@
         <div class="text-sm text-pink-500">Total QR</div>
     </div>
     <div class="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
+        <div class="text-3xl">⏱️</div>
+        <div class="mt-2 text-3xl font-bold text-pink-700">{{ $stats['timers'] ?? 0 }}</div>
+        <div class="text-sm text-pink-500">Total Timer QR</div>
+    </div>
+    <div class="rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
         <div class="text-3xl">👥</div>
         <div class="mt-2 text-3xl font-bold text-pink-700">{{ $stats['admins'] }}</div>
         <div class="text-sm text-pink-500">User Admin</div>
     </div>
 </div>
+
 
 <div class="mt-6 rounded-2xl border border-pink-100 bg-white p-5 shadow-sm">
     <h2 class="mb-4 text-lg font-semibold text-pink-800">Folder Terbaru</h2>

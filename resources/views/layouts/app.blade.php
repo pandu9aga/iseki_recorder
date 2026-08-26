@@ -26,10 +26,12 @@
                     @if (session('role') === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">Dashboard</a>
                         <a href="{{ route('admin.folders.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">Semua Folder</a>
+                        <a href="{{ route('admin.timer.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">⏱️ Timer</a>
                         <a href="{{ route('admin.users.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">User Admin</a>
                     @else
                         <a href="{{ route('member.dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">Dashboard</a>
                         <a href="{{ route('member.folders.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">Folder Saya</a>
+                        <a href="{{ route('member.timer.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">⏱️ Timer</a>
                     @endif
 
                     <div class="flex items-center gap-3 border-l border-pink-400 pl-4">
@@ -51,11 +53,14 @@
                 @if (session('role') === 'admin')
                     <a href="{{ route('admin.dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">Dashboard</a>
                     <a href="{{ route('admin.folders.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">Semua Folder</a>
+                    <a href="{{ route('admin.timer.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">⏱️ Timer</a>
                     <a href="{{ route('admin.users.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">User Admin</a>
                 @else
                     <a href="{{ route('member.dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">Dashboard</a>
                     <a href="{{ route('member.folders.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">Folder Saya</a>
+                    <a href="{{ route('member.timer.index') }}" class="rounded-md px-3 py-2 text-sm font-medium text-pink-100 hover:bg-pink-700 hover:text-white">⏱️ Timer</a>
                 @endif
+
                 <div class="mt-2 flex items-center justify-between rounded-lg bg-pink-700/60 px-3 py-2">
                     <span class="text-sm text-white">{{ session('name') }} · {{ session('role') === 'admin' ? 'Admin' : 'NIK '.session('nik') }}</span>
                     <form method="POST" action="{{ route('logout') }}">

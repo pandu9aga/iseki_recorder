@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\QrTimerController;
 use App\Http\Controllers\StringController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +32,9 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
             'photos' => \App\Models\FolderPhoto::count(),
             'strings' => \App\Models\FolderString::count(),
             'admins' => \App\Models\Admin::count(),
+            'timers' => \App\Models\QrTimer::count(),
         ];
+
 
         $recentFolders = \App\Models\Folder::withCount('photos')
             ->withCount('strings')
@@ -59,6 +62,12 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::delete('folders/{folder}/strings/{string}', [StringController::class, 'destroy'])->name('strings.destroy');
     Route::post('folders/{folder}/download/photos', [DownloadController::class, 'photosZip'])->name('download.photos');
     Route::get('folders/{folder}/download/strings', [DownloadController::class, 'stringsExcel'])->name('download.strings');
+
+    // Menu Timer Admin
+    Route::get('timer', [QrTimerController::class, 'index'])->name('timer.index');
+    Route::post('timer/scan', [QrTimerController::class, 'scan'])->name('timer.scan');
+    Route::delete('timer/{timer}', [QrTimerController::class, 'destroy'])->name('timer.destroy');
+    Route::get('timer/export', [QrTimerController::class, 'exportExcel'])->name('timer.export');
 });
 
 Route::prefix('member')->name('member.')->middleware('member')->group(function () {
@@ -69,6 +78,7 @@ Route::prefix('member')->name('member.')->middleware('member')->group(function (
             'folders' => \App\Models\Folder::where('nik', $nik)->count(),
             'photos' => \App\Models\FolderPhoto::whereIn('folder_id', \App\Models\Folder::where('nik', $nik)->pluck('id'))->count(),
             'strings' => \App\Models\FolderString::whereIn('folder_id', \App\Models\Folder::where('nik', $nik)->pluck('id'))->count(),
+            'timers' => \App\Models\QrTimer::where('nik', $nik)->count(),
         ];
 
         $recentFolders = \App\Models\Folder::where('nik', $nik)
@@ -92,4 +102,11 @@ Route::prefix('member')->name('member.')->middleware('member')->group(function (
     Route::delete('folders/{folder}/strings/{string}', [StringController::class, 'destroy'])->name('strings.destroy');
     Route::post('folders/{folder}/download/photos', [DownloadController::class, 'photosZip'])->name('download.photos');
     Route::get('folders/{folder}/download/strings', [DownloadController::class, 'stringsExcel'])->name('download.strings');
+
+    // Menu Timer Member
+    Route::get('timer', [QrTimerController::class, 'index'])->name('timer.index');
+    Route::post('timer/scan', [QrTimerController::class, 'scan'])->name('timer.scan');
+    Route::delete('timer/{timer}', [QrTimerController::class, 'destroy'])->name('timer.destroy');
+    Route::get('timer/export', [QrTimerController::class, 'exportExcel'])->name('timer.export');
 });
+
