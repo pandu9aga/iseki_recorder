@@ -48,7 +48,7 @@
     </form>
 </div>
 
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="{{ asset('js/html5-qrcode.min.js') }}" type="text/javascript"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const html5QrcodeScanner = new Html5QrcodeScanner(
