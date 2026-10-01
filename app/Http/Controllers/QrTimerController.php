@@ -182,15 +182,17 @@ class QrTimerController extends Controller
             'F1' => 'Scan Terakhir (End)',
             'G1' => 'Selisih / Durasi',
             'H1' => 'Durasi (Detik)',
-            'I1' => 'Status',
+            'I1' => 'Durasi (Menit)',
+            'J1' => 'Durasi (Jam)',
+            'K1' => 'Status',
         ];
 
         foreach ($headers as $cell => $value) {
             $sheet->setCellValue($cell, $value);
         }
 
-        $sheet->getStyle('A1:I1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:I1')->getFill()
+        $sheet->getStyle('A1:K1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:K1')->getFill()
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
             ->getStartColor()->setARGB('FFFCE7F3'); // soft pink
 
@@ -202,10 +204,13 @@ class QrTimerController extends Controller
         $sheet->getColumnDimension('F')->setWidth(22);
         $sheet->getColumnDimension('G')->setWidth(18);
         $sheet->getColumnDimension('H')->setWidth(15);
-        $sheet->getColumnDimension('I')->setWidth(14);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('J')->setWidth(15);
+        $sheet->getColumnDimension('K')->setWidth(14);
 
         $row = 2;
         foreach ($timers as $index => $t) {
+            $sec = $t->duration_seconds;
             $sheet->setCellValue('A' . $row, $index + 1);
             $sheet->setCellValueExplicit('B' . $row, $t->nik, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
             $sheet->setCellValue('C' . $row, $t->member_name ?? '-');
@@ -213,11 +218,17 @@ class QrTimerController extends Controller
             $sheet->setCellValue('E' . $row, $t->start_time ? $t->start_time->format('Y-m-d H:i:s') : '-');
             $sheet->setCellValue('F' . $row, $t->end_time ? $t->end_time->format('Y-m-d H:i:s') : '-');
             $sheet->setCellValue('G' . $row, $t->formatted_duration);
-            $sheet->setCellValue('H' . $row, $t->duration_seconds ?? 0);
-            $sheet->setCellValue('I' . $row, $t->status === 'completed' ? 'Selesai' : 'Sedang Berjalan');
+            $sheet->setCellValue('H' . $row, $sec ?? 0);
+            $sheet->setCellValue('I' . $row, $sec !== null ? round($sec / 60, 2) : 0);
+            $sheet->setCellValue('J' . $row, $sec !== null ? round($sec / 3600, 2) : 0);
+            $sheet->setCellValue('K' . $row, $t->status === 'completed' ? 'Selesai' : 'Sedang Berjalan');
 
             $row++;
         }
+
+        // Set auto filter dari kolom header (A1 sampai K1 atau baris data terakhir)
+        $maxRow = max(1, $row - 1);
+        $sheet->setAutoFilter('A1:K' . $maxRow);
 
         $writer = new Xlsx($spreadsheet);
         $fileName = 'laporan_timer_qr_' . date('Ymd_His') . '.xlsx';

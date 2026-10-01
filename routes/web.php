@@ -68,6 +68,13 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('timer/scan', [QrTimerController::class, 'scan'])->name('timer.scan');
     Route::delete('timer/{timer}', [QrTimerController::class, 'destroy'])->name('timer.destroy');
     Route::get('timer/export', [QrTimerController::class, 'exportExcel'])->name('timer.export');
+
+    // Menu Photo Part Admin
+    Route::get('part-photos/export', [\App\Http\Controllers\PartPhotoController::class, 'exportExcel'])->name('part-photos.export');
+    Route::get('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'index'])->name('part-photos.index');
+    Route::get('part-photos/create', [\App\Http\Controllers\PartPhotoController::class, 'create'])->name('part-photos.create');
+    Route::post('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'store'])->name('part-photos.store');
+    Route::delete('part-photos/{partPhoto}', [\App\Http\Controllers\PartPhotoController::class, 'destroy'])->name('part-photos.destroy');
 });
 
 Route::prefix('member')->name('member.')->middleware('member')->group(function () {
@@ -108,5 +115,11 @@ Route::prefix('member')->name('member.')->middleware('member')->group(function (
     Route::post('timer/scan', [QrTimerController::class, 'scan'])->name('timer.scan');
     Route::delete('timer/{timer}', [QrTimerController::class, 'destroy'])->name('timer.destroy');
     Route::get('timer/export', [QrTimerController::class, 'exportExcel'])->name('timer.export');
+
+    // Menu Photo Part Member
+    Route::get('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'index'])->name('part-photos.index');
+    Route::get('part-photos/create', [\App\Http\Controllers\PartPhotoController::class, 'create'])->name('part-photos.create');
+    Route::post('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'store'])->name('part-photos.store');
+    Route::delete('part-photos/{partPhoto}', [\App\Http\Controllers\PartPhotoController::class, 'destroy'])->name('part-photos.destroy');
 });
 
