@@ -78,14 +78,61 @@
         var previewImage = document.getElementById('photo-preview');
 
         if (input.files && input.files[0]) {
+            var file = input.files[0];
+            
+            if (!file.type.match(/image.*/)) return;
+
             var reader = new FileReader();
             
             reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                previewContainer.classList.remove('hidden');
+                var img = new Image();
+                img.onload = function() {
+                    var maxWidth = 1280;
+                    var maxHeight = 1280;
+                    var width = img.width;
+                    var height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round((height *= maxWidth / width));
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round((width *= maxHeight / height));
+                            height = maxHeight;
+                        }
+                    }
+
+                    var canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    var ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    canvas.toBlob(function(blob) {
+                        if (!blob) return;
+                        
+                        var objectUrl = URL.createObjectURL(blob);
+                        previewImage.src = objectUrl;
+                        previewContainer.classList.remove('hidden');
+
+                        var compressedFile = new File([blob], file.name, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now()
+                        });
+
+                        var dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(compressedFile);
+                        input.files = dataTransfer.files;
+                        
+                    }, 'image/jpeg', 0.7);
+                };
+                img.src = e.target.result;
             }
             
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
         } else {
             previewImage.src = '#';
             previewContainer.classList.add('hidden');
