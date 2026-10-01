@@ -118,8 +118,12 @@
                         previewImage.src = objectUrl;
                         previewContainer.classList.remove('hidden');
 
-                        var compressedFile = new File([blob], file.name, {
-                            type: 'image/jpeg',
+                        // Ganti ekstensi file menjadi .webp
+                        var originalName = file.name.split('.').slice(0, -1).join('.') || file.name;
+                        var newFileName = originalName + '.webp';
+
+                        var compressedFile = new File([blob], newFileName, {
+                            type: 'image/webp',
                             lastModified: Date.now()
                         });
 
@@ -127,7 +131,7 @@
                         dataTransfer.items.add(compressedFile);
                         input.files = dataTransfer.files;
                         
-                    }, 'image/jpeg', 0.7);
+                    }, 'image/webp', 0.8);
                 };
                 img.src = e.target.result;
             }
