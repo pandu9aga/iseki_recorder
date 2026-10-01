@@ -71,6 +71,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
     // Menu Photo Part Admin
     Route::get('part-photos/export', [\App\Http\Controllers\PartPhotoController::class, 'exportExcel'])->name('part-photos.export');
+    Route::get('part-photos/check-name', [\App\Http\Controllers\PartPhotoController::class, 'checkName'])->name('part-photos.check');
     Route::get('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'index'])->name('part-photos.index');
     Route::get('part-photos/create', [\App\Http\Controllers\PartPhotoController::class, 'create'])->name('part-photos.create');
     Route::post('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'store'])->name('part-photos.store');
@@ -117,6 +118,7 @@ Route::prefix('member')->name('member.')->middleware('member')->group(function (
     Route::get('timer/export', [QrTimerController::class, 'exportExcel'])->name('timer.export');
 
     // Menu Photo Part Member
+    Route::get('part-photos/check-name', [\App\Http\Controllers\PartPhotoController::class, 'checkName'])->name('part-photos.check');
     Route::get('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'index'])->name('part-photos.index');
     Route::get('part-photos/create', [\App\Http\Controllers\PartPhotoController::class, 'create'])->name('part-photos.create');
     Route::post('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'store'])->name('part-photos.store');

@@ -16,6 +16,11 @@
         <label class="mb-2 block text-sm font-semibold text-gray-700">1. Scan QR Code Part</label>
         <div id="reader" class="overflow-hidden rounded-xl border-2 border-dashed border-pink-300"></div>
         <p class="mt-2 text-xs text-gray-500 text-center" id="scan-status">Arahkan kamera ke QR Code...</p>
+        <div class="mt-3 text-center">
+            <button type="button" id="btn-rescan" class="hidden rounded-lg bg-pink-100 px-4 py-2 text-sm font-semibold text-pink-700 hover:bg-pink-200">
+                🔄 Scan Ulang QR Code
+            </button>
+        </div>
     </div>
 
     <!-- Form Section -->
@@ -51,25 +56,62 @@
 <script src="{{ asset('js/html5-qrcode.min.js') }}" type="text/javascript"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const html5QrcodeScanner = new Html5QrcodeScanner(
+        let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
             { fps: 10, qrbox: {width: 250, height: 250} },
             /* verbose= */ false);
         
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        function startScanner() {
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        }
+
+        startScanner();
 
         function onScanSuccess(decodedText, decodedResult) {
             // Fill the input
             document.getElementById('name').value = decodedText;
-            document.getElementById('scan-status').innerHTML = '<span class="text-green-600 font-bold">✓ QR Berhasil di-scan!</span>';
+            document.getElementById('scan-status').innerHTML = '<span class="text-green-600 font-bold">✓ QR Berhasil di-scan! Memeriksa database...</span>';
             
-            // Stop scanning
-            html5QrcodeScanner.clear();
+            // Stop scanning and show rescan button
+            html5QrcodeScanner.clear().then(() => {
+                document.getElementById('btn-rescan').classList.remove('hidden');
+            }).catch(err => {
+                document.getElementById('btn-rescan').classList.remove('hidden');
+            });
+
+            // Check database for existing name
+            fetch(`{{ route(session('role') . '.part-photos.check') }}?name=${encodeURIComponent(decodedText)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.exists) {
+                        document.getElementById('scan-status').innerHTML = '<span class="text-orange-600 font-bold">⚠️ Part ini sudah difoto. Upload foto baru akan mereplace foto yang lama.</span>';
+                        alert("Peringatan: Part ini sudah pernah di-foto!\n\nJika Anda mengupload foto baru sekarang, foto yang lama akan ditimpa (replace).");
+                    } else {
+                        document.getElementById('scan-status').innerHTML = '<span class="text-green-600 font-bold">✓ QR Berhasil di-scan!</span>';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('scan-status').innerHTML = '<span class="text-green-600 font-bold">✓ QR Berhasil di-scan!</span>';
+                });
         }
 
         function onScanFailure(error) {
             // handle scan failure, usually better to ignore and keep scanning
         }
+
+        document.getElementById('btn-rescan').addEventListener('click', function() {
+            document.getElementById('name').value = '';
+            document.getElementById('scan-status').innerHTML = 'Arahkan kamera ke QR Code...';
+            this.classList.add('hidden');
+            
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader",
+                { fps: 10, qrbox: {width: 250, height: 250} },
+                /* verbose= */ false
+            );
+            startScanner();
+        });
     });
 
     function previewImage(event) {
@@ -87,8 +129,8 @@
             reader.onload = function(e) {
                 var img = new Image();
                 img.onload = function() {
-                    var maxWidth = 1280;
-                    var maxHeight = 1280;
+                    var maxWidth = 3600;
+                    var maxHeight = 3600;
                     var width = img.width;
                     var height = img.height;
 

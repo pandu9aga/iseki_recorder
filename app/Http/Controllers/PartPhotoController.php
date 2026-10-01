@@ -65,6 +65,12 @@ class PartPhotoController extends Controller
         return view('part-photos.create');
     }
 
+    public function checkName(Request $request)
+    {
+        $exists = \App\Models\PartPhoto::where('name', $request->name)->exists();
+        return response()->json(['exists' => $exists]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
