@@ -19,7 +19,7 @@
             <label for="name" class="mb-1 block text-sm font-semibold text-gray-700">1. Name Part</label>
             <div class="flex gap-2">
                 <input type="text" id="name" name="name" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500" required placeholder="Ketik nama part secara manual atau scan QR">
-                <button type="button" id="btn-start-scan" class="shrink-0 rounded-lg bg-pink-100 px-4 py-2 text-sm font-semibold text-pink-700 hover:bg-pink-200">
+                <button type="button" id="btn-start-scan" class="hidden shrink-0 rounded-lg bg-pink-100 px-4 py-2 text-sm font-semibold text-pink-700 hover:bg-pink-200">
                     📷 Scan QR
                 </button>
             </div>
@@ -29,7 +29,7 @@
         </div>
 
         <!-- QR Scanner Section -->
-        <div id="scanner-section" class="mb-6 hidden">
+        <div id="scanner-section" class="mb-6">
             <div id="reader" class="overflow-hidden rounded-xl border-2 border-dashed border-pink-300"></div>
             <p class="mt-2 text-xs text-gray-500 text-center" id="scan-status">Arahkan kamera ke QR Code...</p>
             <div class="mt-3 text-center flex justify-center gap-2">
@@ -71,6 +71,9 @@
         function startScanner() {
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
         }
+
+        // Mulai scanner secara otomatis saat halaman dimuat
+        startScanner();
 
         function onScanSuccess(decodedText, decodedResult) {
             // Fill the input
