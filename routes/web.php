@@ -6,6 +6,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\QrTimerController;
+use App\Http\Controllers\RackController;
 use App\Http\Controllers\StringController;
 use Illuminate\Support\Facades\Route;
 
@@ -76,6 +77,12 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('part-photos/create', [\App\Http\Controllers\PartPhotoController::class, 'create'])->name('part-photos.create');
     Route::post('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'store'])->name('part-photos.store');
     Route::delete('part-photos/{partPhoto}', [\App\Http\Controllers\PartPhotoController::class, 'destroy'])->name('part-photos.destroy');
+
+    // Menu Rack Admin
+    Route::get('rack', [RackController::class, 'adminIndex'])->name('rack.index');
+    Route::get('rack/{parentFolder}', [RackController::class, 'adminShow'])->name('rack.show');
+    Route::delete('rack/{parentFolder}', [RackController::class, 'destroyParentFolder'])->name('rack.destroy');
+    Route::delete('rack/{parentFolder}/qr/{qrFolder}/photos/{photo}', [RackController::class, 'deletePhoto'])->name('rack.photos.destroy');
 });
 
 Route::prefix('member')->name('member.')->middleware('member')->group(function () {
@@ -123,5 +130,15 @@ Route::prefix('member')->name('member.')->middleware('member')->group(function (
     Route::get('part-photos/create', [\App\Http\Controllers\PartPhotoController::class, 'create'])->name('part-photos.create');
     Route::post('part-photos', [\App\Http\Controllers\PartPhotoController::class, 'store'])->name('part-photos.store');
     Route::delete('part-photos/{partPhoto}', [\App\Http\Controllers\PartPhotoController::class, 'destroy'])->name('part-photos.destroy');
+
+    // Menu Rack Member
+    Route::get('rack', [RackController::class, 'memberIndex'])->name('rack.index');
+    Route::post('rack/folders', [RackController::class, 'storeParentFolder'])->name('rack.folders.store');
+    Route::get('rack/{parentFolder}/scan', [RackController::class, 'scanView'])->name('rack.scan');
+    Route::post('rack/{parentFolder}/scan', [RackController::class, 'processQrScan'])->name('rack.scan.process');
+    Route::get('rack/{parentFolder}/qr/{qrFolder}/camera', [RackController::class, 'cameraView'])->name('rack.camera');
+    Route::post('rack/{parentFolder}/qr/{qrFolder}/photos', [RackController::class, 'uploadPhoto'])->name('rack.photos.upload');
+    Route::delete('rack/{parentFolder}/qr/{qrFolder}/photos/{photo}', [RackController::class, 'deletePhoto'])->name('rack.photos.destroy');
+    Route::delete('rack/{parentFolder}', [RackController::class, 'destroyParentFolder'])->name('rack.destroy');
 });
 
