@@ -48,8 +48,8 @@
                         <form action="{{ route('member.rack.destroy', $folder->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus folder ini beserta seluruh foto di dalamnya?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="rounded-lg bg-red-50 p-2 text-red-600 hover:bg-red-100 transition" title="Hapus Folder">
-                                🗑️
+                            <button type="submit" style="background-color: #dc2626 !important; color: #ffffff !important; border: 1px solid #b91c1c !important;" class="rounded-lg px-3.5 py-2 text-xs font-bold shadow hover:opacity-90 transition" title="Hapus Seluruh Folder">
+                                🗑️ Hapus
                             </button>
                         </form>
                     </div>

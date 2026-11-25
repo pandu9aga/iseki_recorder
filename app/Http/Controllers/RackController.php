@@ -208,9 +208,22 @@ class RackController extends Controller
     public function adminShow(RackParentFolder $parentFolder)
     {
         $parentFolder->load(['qrFolders' => function ($q) {
-            $q->with('photos')->orderByDesc('id');
+            $q->withCount('photos')->orderByDesc('id');
         }]);
 
         return view('rack.admin.show', compact('parentFolder'));
+    }
+
+    public function adminQrShow(RackParentFolder $parentFolder, RackQrFolder $qrFolder)
+    {
+        if ($qrFolder->rack_parent_folder_id !== $parentFolder->id) {
+            abort(404);
+        }
+
+        $qrFolder->load(['photos' => function ($q) {
+            $q->orderByDesc('id');
+        }]);
+
+        return view('rack.admin.qr-photos', compact('parentFolder', 'qrFolder'));
     }
 }

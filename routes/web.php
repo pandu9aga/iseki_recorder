@@ -81,6 +81,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     // Menu Rack Admin
     Route::get('rack', [RackController::class, 'adminIndex'])->name('rack.index');
     Route::get('rack/{parentFolder}', [RackController::class, 'adminShow'])->name('rack.show');
+    Route::get('rack/{parentFolder}/qr/{qrFolder}', [RackController::class, 'adminQrShow'])->name('rack.qr.show');
     Route::delete('rack/{parentFolder}', [RackController::class, 'destroyParentFolder'])->name('rack.destroy');
     Route::delete('rack/{parentFolder}/qr/{qrFolder}/photos/{photo}', [RackController::class, 'deletePhoto'])->name('rack.photos.destroy');
 });
